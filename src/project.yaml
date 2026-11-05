@@ -1,0 +1,182 @@
+# ============================================================================
+# UGOS Pro 应用清单 —— NasDSH 工作台
+# ============================================================================
+# 文档: https://developer.ugnas.com/doc/tools/project-yaml.html
+# 打包(在 NAS 上执行): ugcli pack --arch amd64 --build <N>
+#
+# 应用: NasDSH —— 在浏览器/远程 App 中使用 DeepSeek Harness
+#   - Web tab：一个共享 dsh web 实例，项目在 UI 内切 Workspace
+#   - CLI tab：每个项目一个 tmux + dsh-TUI 终端（关窗保留）
+#   - 模型 provider 与 API Key 持久化在 DATA_PATH
+# ============================================================================
+
+spec_version: "2.1"
+
+app_id: "com.firewell.nasdsh"
+
+version: "0.1.0"
+
+support_arch:
+  - amd64
+
+product_series:
+  - nasync
+
+supports:
+  - pc
+  - app
+
+is_docker_app: true
+
+only_admin: false
+
+# 容器内 sessiond 监听 8080，映射到宿主 12704（12703 已被 NasOC 占用）
+port: 12704
+
+# tab = 桌面图标点击后浏览器新标签页直接访问 IP:端口（自带完整 web 服务）
+open_type: "tab"
+
+tag_types:
+  - utility
+  - devtool
+
+depend_fw_version: "1.13.0.0000"
+depend_docker_version: "20.10.0"
+
+support_migration: false
+allow_add_access_path: false
+
+license_agreement_link:
+  - https://github.com/firewelly/nasdsh/blob/main/LICENSE
+source_code_link:
+  - https://github.com/firewelly/nasdsh
+privacy_policy_link:
+  - https://github.com/firewelly/nasdsh/blob/main/PRIVACY.md
+technical_support_link:
+  - https://github.com/firewelly/nasdsh/issues
+
+permissions:
+  - NETWORK.ACCESS_INTERNET
+
+# ── 安装时可配置项（注入 compose 变量）──
+parameters:
+  # 项目/工作目录（容器内按原路径挂载，路径与宿主一致）
+  - key: PATH
+    type: path
+    multi: true
+    required: true
+    i18n:
+      en-US:
+        name: Project Directories
+        description: Directories containing code projects, e.g. /volume1/projects (multiple allowed; mounted at the same path inside the container)
+      zh-CN:
+        name: 项目目录
+        description: 存放代码项目的目录，如 /volume1/projects（可配置多个；容器内按原路径挂载）
+
+  # 数据存储路径（SSD 优先，勿用系统盘/eMMC）
+  - key: DATA_PATH
+    type: path
+    required: true
+    changeable: false
+    i18n:
+      en-US:
+        name: Data Directory (SSD recommended)
+        description: >-
+          Persistent data for dsh profiles, model credentials, sessions and
+          logs. Recommend an SSD volume, e.g. /volume2/docker/nasdsh (create a
+          subfolder under a docker folder). Do NOT use the system disk / eMMC.
+      zh-CN:
+        name: 数据目录（建议选 SSD 卷）
+        description: >-
+          dsh profile、模型凭据、会话与日志的持久存储位置。建议选择 SSD 卷，
+          如 /volume2/docker/nasdsh（在卷上建 docker 子目录存放）。
+          请勿使用系统盘/eMMC；也可选其他数据卷或自定义路径，建议独立子目录。
+
+  # 可选访问口令（UGREENlink 远程访问时建议设置）
+  - key: TERMINAL_PIN
+    type: password
+    required: false
+    changeable: true
+    i18n:
+      en-US:
+        name: Access PIN (optional)
+        description: If set, the workbench asks for this PIN (recommended for remote/UGREENlink access). Leave empty to disable.
+      zh-CN:
+        name: 访问口令（可选）
+        description: 设置后打开工作台需输入该口令（使用 UGREENlink 远程访问时建议设置）。留空表示不启用。
+
+  # 模型 API Key（可选；也可以稍后在 Web 工作台 Settings → Models 填写）
+  - key: DEEPSEEK_API_KEY
+    type: password
+    required: false
+    changeable: true
+    i18n:
+      en-US:
+        name: DeepSeek API Key (optional)
+        description: Used by the built-in deepseek-official provider. Can also be configured later in Settings → Models.
+      zh-CN:
+        name: DeepSeek API Key（可选）
+        description: 供内置 deepseek-official provider 使用。也可稍后在 Web 工作台 Settings → Models 中填写。
+
+  - key: BIGMODEL_API_KEY
+    type: password
+    required: false
+    changeable: true
+    i18n:
+      en-US:
+        name: BigModel API Key (optional)
+        description: Zhipu BigModel Coding Plan key. When present, the default model becomes bigmodel-coding-plan/glm-5.3-flash.
+      zh-CN:
+        name: BigModel API Key（可选）
+        description: 智谱 BigModel Coding Plan Key。配置后默认模型为 bigmodel-coding-plan/glm-5.3-flash（使用 /coding/ 订阅端点）。
+
+  - key: BAILIAN_API_KEY
+    type: password
+    required: false
+    changeable: true
+    i18n:
+      en-US:
+        name: Bailian API Key (optional)
+        description: Alibaba Bailian Coding Plan key (qwen3.7-plus / qwen3.8-max etc.).
+      zh-CN:
+        name: 百炼 API Key（可选）
+        description: 阿里云百炼 Coding Plan Key（qwen3.7-plus / qwen3.8-max 等）。
+
+  - key: TOKENPLAN_API_KEY
+    type: password
+    required: false
+    changeable: true
+    i18n:
+      en-US:
+        name: Token Plan API Key (optional)
+        description: Alibaba Token Plan key (qwen3.8-max / deepseek-v4.1-flash etc.).
+      zh-CN:
+        name: Token Plan API Key（可选）
+        description: 阿里云 Token Plan Key（qwen3.8-max / deepseek-v4.1-flash 等）。
+
+i18n:
+  en-US:
+    name: "NasDSH Workbench"
+    description: >-
+      DeepSeek Harness (dsh) on your NAS. Open the shared Web workspace (one
+      dsh web instance; add and switch projects as Workspaces inside the dsh
+      UI) or create a CLI tab (per-project tmux + dsh-TUI). CLI tabs survive
+      closing the window and reconnect seamlessly. Sessions and model
+      credentials persist on the SSD volume you choose. Port 12704.
+    author: firewell
+    official: https://github.com/firewelly/nasdsh
+    help: https://github.com/firewelly/nasdsh#readme
+    publisher: firewell
+    publisher_link: https://github.com/firewelly
+  zh-CN:
+    name: "NasDSH 工作台"
+    description: >-
+      在 NAS 上运行 DeepSeek Harness。打开共享 Web 工作台（一个 dsh web
+      实例，项目在 dsh UI 内切 Workspace），或新建 CLI 终端（每个项目一个
+      tmux + dsh-TUI，关窗保留、重开即续）。会话与模型凭据持久保存在您指定
+      的 SSD 卷。端口 12704。
+    author: firewell
+    official: https://github.com/firewelly/nasdsh
+    help: https://github.com/firewelly/nasdsh#使用
+    publisher: firewell
+    publisher_link: https://github.com/firewelly

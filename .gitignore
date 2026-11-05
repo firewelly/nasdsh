@@ -1,0 +1,20 @@
+.DS_Store
+__pycache__/
+*.pyc
+src/build_dir/
+src/rootfs_amd64/images/*.tar
+*.upk
+*.log
+fnos/dist/
+deploy/docker/.env
+dist/
+
+# 打包/构建产物与本地配置
+dist/
+fnos/dist/
+*.fpk
+*.tar.gz
+src/build_dir/
+deploy/docker/.env
+.DS_Store
+*.log

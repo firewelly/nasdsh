@@ -1,0 +1,31 @@
+services:
+  app:
+    image: nasdsh:0.1.0
+    container_name: nasdsh
+    # 以 root 启动：entrypoint 校正数据目录属主后降权到 1000:10 运行
+    restart: always
+    environment:
+      - TZ=${TZ}
+      - TERM_PIN=${TERMINAL_PIN}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - BIGMODEL_API_KEY=${BIGMODEL_API_KEY}
+      - BAILIAN_API_KEY=${BAILIAN_API_KEY}
+      - TOKENPLAN_API_KEY=${TOKENPLAN_API_KEY}
+    ports:
+      - "12704:8080"
+    volumes:
+      # dsh profile / 凭据 / 会话 / 日志（随应用升级保留）
+      - ${DATA_PATH}:/data
+      # 项目目录：安装时按原路径挂载进容器（路径与宿主一致）
+      - ${PATH}
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request as u; u.urlopen('http://127.0.0.1:8080/api/health', timeout=5)"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
