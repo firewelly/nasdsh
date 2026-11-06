@@ -158,7 +158,18 @@ start_daemon ()
     done
     DOCKER_ARGS+=( "${IMAGE_TAG}" )
 
-    echo "docker run ${DOCKER_ARGS[*]}" >> "${LOG_FILE}"
+    # 日志脱敏：-e KEY=value 不落日志（凭据只进容器 env）
+    local _args="" _prev_skip=0
+    for a in "${DOCKER_ARGS[@]}"; do
+        if [ "$_prev_skip" = "1" ]; then
+            _args="$_args <redacted>"; _prev_skip=0
+        elif [ "$a" = "-e" ]; then
+            _args="$_args -e"; _prev_skip=1
+        else
+            _args="$_args $a"
+        fi
+    done
+    echo "docker run${_args}" >> "${LOG_FILE}"
     docker rm -f "${CONTAINER_NAME}" >/dev/null 2>&1 || true
     docker run "${DOCKER_ARGS[@]}" >> "${LOG_FILE}" 2>&1 || return 1
 

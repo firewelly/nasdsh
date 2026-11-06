@@ -41,6 +41,18 @@ fnos/
     └── wizard/install     # 安装向导字段
 ```
 
+## 隐私保证
+
+- 安装包（fpk）只含：离线镜像（由 `core/` 构建，构建上下文不含任何凭据）、
+  桌面入口与脚本；**不含模型 key / PIN / 凭据库**。
+- 凭据只存在于运行时：安装向导写入 `<var>/*.conf`（0600）与容器 env，
+  数据目录的 `.credentials.yaml`，均随数据目录走、不随包分发。
+- `build_fpk.py` 打包完成后自动执行 `tools/verify_no_keys.py`，把产物逐层
+  解包（fpk→app.tgz→docker 镜像）与运行时真实凭据值比对，**命中即构建失败
+  并删除产物**；也可手动复核：
+  `python3 tools/verify_no_keys.py fnos/dist/xxx.fpk`
+- 启动日志对 `docker run` 参数做了脱敏（`-e` 值不落日志）。
+
 ## 升级
 
 改 `fpk_root/manifest` 的 `version` → `docker build` 新镜像 → 重新 `build_fpk.py`

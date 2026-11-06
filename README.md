@@ -206,6 +206,9 @@ ${DATA_PATH}/                     # 安装参数 DATA_PATH（建议 SSD 卷）
   `Host`/`Origin` 原样透传，由 dsh 自己的 browser-trust fence 校验。
 - API Key 不写入镜像；安装参数经环境变量注入，或由 dsh 凭据存储持久化。
 - 容器内以 uid 1000 / gid 10 运行，数据目录启动时校正属主。
+- **凭据不进安装包**：fpk/upk/镜像只含代码；key 只落在运行时（向导 conf/凭据库/env）。
+  `fnos/build_fpk.py` 打包后自动跑 `tools/verify_no_keys.py` 对产物逐层扫描真实凭据值，
+  命中即失败删除；启动日志对 `-e` 参数脱敏。
 
 ## 测试
 

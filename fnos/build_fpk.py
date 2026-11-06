@@ -149,6 +149,19 @@ def main():
                 for name in sorted(os.listdir(sub_dir)):
                     add_file(tar, os.path.join(sub_dir, name), "./%s/%s" % (sub, name), 0o644)
 
+        # ---- 5. 隐私校验：产物内不得含真实凭据值（命中即失败并删除产物）----
+        verifier = os.path.join(ROOT, "tools", "verify_no_keys.py")
+        if os.path.isfile(verifier):
+            print("==> 隐私校验 verify-no-keys")
+            r = subprocess.run([sys.executable, verifier, args.out],
+                               capture_output=True, text=True)
+            sys.stdout.write(r.stdout or "")
+            sys.stderr.write(r.stderr or "")
+            if r.returncode == 2:
+                os.remove(args.out)
+                print("❌ 已删除产物（发现凭据，禁止分发）")
+                return 1
+
         print("OK: %s (%.1f MB, 镜像 %s)"
               % (args.out, os.path.getsize(args.out) / 1e6, args.image))
         return 0
