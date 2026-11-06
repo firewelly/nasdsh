@@ -6,7 +6,6 @@ src/rootfs_amd64/images/*.tar
 *.upk
 *.log
 fnos/dist/
-deploy/docker/.env
 dist/
 
 # 打包/构建产物与本地配置
@@ -15,6 +14,5 @@ fnos/dist/
 *.fpk
 *.tar.gz
 src/build_dir/
-deploy/docker/.env
 .DS_Store
 *.log

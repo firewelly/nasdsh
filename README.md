@@ -71,24 +71,24 @@ nas-dsh/
 ├── fnos/                     # fnOS 打包工程（fpk，自带离线镜像）
 │   ├── build_fpk.py
 │   └── fpk_root/             #   manifest / cmd / wizard / config
-├── deploy/docker/            # 通用 Docker 部署（compose + .env 示例）
 ├── tools/
 │   ├── upload.sh             #   Mac → NAS 源码传输
-│   ├── export-image.sh       #   导出离线镜像 tar.gz
+│   ├── verify_no_keys.py     #   安装包隐私校验（逐层扫真实凭据值）
 │   ├── test_web.py           #   Web 反代 + token + WebSocket 测试
 │   └── test_ws.py            #   CLI 终端桥测试
 └── store/                    # 应用中心图标等
 ```
 
-## 部署方式（三选一）
+## 部署方式（二选一）
 
-三种部署共用同一个 `core/`，区别只在分发外壳：
+两种 NAS 应用包共用同一个 `core/`，区别只在分发外壳。
+（普通 Linux 主机不需要本项目：直接 `npm i -g @deepseek-ai/dsh @deepseek-harness-tui/dsh-tui`
+ 即可使用 dsh；本项目的价值是 NAS 应用化的工作台外壳。）
 
 | 方式 | 目标系统 | 产物 | 说明 |
 |---|---|---|---|
 | **UGOS Pro 应用**（upk） | UGOS Pro（X86） | `src/build_dir/pkgs/upk/*.upk` | 应用中心安装，端口 12704 |
 | **fnOS 应用**（fpk） | fnOS ≥0.8.1（X86） | `fnos/dist/nasdsh-fnos-*.fpk` | 应用中心安装，自带离线镜像，端口 12704 |
-| **通用 Docker** | 任意 x86_64 Docker 主机 | `deploy/docker/` | compose + .env，最灵活 |
 
 ### UGOS Pro（upk）
 
@@ -129,14 +129,7 @@ python3 fnos/build_fpk.py            # 产物 fnos/dist/nasdsh-fnos-0.1.0.fpk
 详细说明见 `fnos/README.md`。fnOS 上项目路径是 `/vol1/...`，sessiond 用
 `NASDSH_ROOTS` 放行（fpk 脚本自动按项目根推导）。
 
-### 通用 Docker
 
-```bash
-cd deploy/docker && cp .env.example .env && vim .env
-docker compose up -d                 # 或先 tools/export-image.sh 做离线包
-```
-
-见 `deploy/docker/README.md`。
 
 ## 使用
 
@@ -243,8 +236,8 @@ NASDSH_TEST_PORT=18080 NASDSH_TEST_PATH=/tmp python3 -I tools/test_ws.py
   仍是 `http://`，不影响主要交互。
 - dsh 仍处于 preview，升级可能带来配置/插件兼容变化；`nasdsh-update` 升级后
   建议新开 tab 验证。
-- fnOS fpk / 通用 Docker 部署已提供（`fnos/`、`deploy/docker/`）；UGOS upk
-  打包需在 UGOS 机器上执行。三种方式的运行行为一致（同一 `core/`）。
+- fnOS fpk 打包已提供（`fnos/`）；UGOS upk 打包需在 UGOS 机器上执行。
+  两种包运行行为一致（同一 `core/`）。普通 Linux 直接安装 dsh，无需本项目。
 
 ## 许可与第三方组件
 
