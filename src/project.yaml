@@ -7,7 +7,7 @@
 # 应用: NasDSH —— 在浏览器/远程 App 中使用 DeepSeek Harness
 #   - Web tab：一个共享 dsh web 实例，项目在 UI 内切 Workspace
 #   - CLI tab：每个项目一个 tmux + dsh-TUI 终端（关窗保留）
-#   - 模型 provider 与 API Key 持久化在 DATA_PATH
+#   - 模型 provider 定义持久化在 DATA_PATH（API Key 在 dsh UI 内配置）
 # ============================================================================
 
 spec_version: "2.1"
@@ -104,55 +104,6 @@ parameters:
       zh-CN:
         name: 访问口令（可选）
         description: 设置后打开工作台需输入该口令（使用 UGREENlink 远程访问时建议设置）。留空表示不启用。
-
-  # 模型 API Key（可选；也可以稍后在 Web 工作台 Settings → Models 填写）
-  - key: DEEPSEEK_API_KEY
-    type: password
-    required: false
-    changeable: true
-    i18n:
-      en-US:
-        name: DeepSeek API Key (optional)
-        description: Used by the built-in deepseek-official provider. Can also be configured later in Settings → Models.
-      zh-CN:
-        name: DeepSeek API Key（可选）
-        description: 供内置 deepseek-official provider 使用。也可稍后在 Web 工作台 Settings → Models 中填写。
-
-  - key: BIGMODEL_API_KEY
-    type: password
-    required: false
-    changeable: true
-    i18n:
-      en-US:
-        name: BigModel API Key (optional)
-        description: Zhipu BigModel Coding Plan key. When present, the default model becomes bigmodel-coding-plan/glm-5.3-flash.
-      zh-CN:
-        name: BigModel API Key（可选）
-        description: 智谱 BigModel Coding Plan Key。配置后默认模型为 bigmodel-coding-plan/glm-5.3-flash（使用 /coding/ 订阅端点）。
-
-  - key: BAILIAN_API_KEY
-    type: password
-    required: false
-    changeable: true
-    i18n:
-      en-US:
-        name: Bailian API Key (optional)
-        description: Alibaba Bailian Coding Plan key (qwen3.7-plus / qwen3.8-max etc.).
-      zh-CN:
-        name: 百炼 API Key（可选）
-        description: 阿里云百炼 Coding Plan Key（qwen3.7-plus / qwen3.8-max 等）。
-
-  - key: TOKENPLAN_API_KEY
-    type: password
-    required: false
-    changeable: true
-    i18n:
-      en-US:
-        name: Token Plan API Key (optional)
-        description: Alibaba Token Plan key (qwen3.8-max / deepseek-v4.1-flash etc.).
-      zh-CN:
-        name: Token Plan API Key（可选）
-        description: 阿里云 Token Plan Key（qwen3.8-max / deepseek-v4.1-flash 等）。
 
 i18n:
   en-US:

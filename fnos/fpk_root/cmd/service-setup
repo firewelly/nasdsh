@@ -17,7 +17,6 @@ CONF_DATA="${VAR}/data.conf"
 CONF_PROJECTS="${VAR}/projects.conf"
 CONF_ROOTS="${VAR}/roots.conf"
 CONF_PIN="${VAR}/pin.conf"          # 0600
-CONF_KEYS="${VAR}/keys.conf"        # 0600，每行 KEY=VALUE
 
 DEFAULT_DATA="${VAR}/data"
 DEFAULT_PROJECTS="/vol1/1000/nasdsh-projects"
@@ -67,22 +66,7 @@ service_postinst ()
     elif [ ! -r "${CONF_PIN}" ]; then
         : > "${CONF_PIN}"
     fi
-    if [ ! -r "${CONF_KEYS}" ]; then
-        : > "${CONF_KEYS}"
-    fi
-    for kv in "DEEPSEEK_API_KEY=${nasdsh_deepseek_key}" \
-              "BIGMODEL_API_KEY=${nasdsh_bigmodel_key}" \
-              "BAILIAN_API_KEY=${nasdsh_bailian_key}" \
-              "TOKENPLAN_API_KEY=${nasdsh_tokenplan_key}"; do
-        key="${kv%%=*}"; val="${kv#*=}"
-        if [ -n "${val}" ]; then
-            grep -v "^${key}=" "${CONF_KEYS}" 2>/dev/null > "${CONF_KEYS}.tmp" || true
-            printf "%s=%s\n" "${key}" "${val}" >> "${CONF_KEYS}.tmp"
-            mv -f "${CONF_KEYS}.tmp" "${CONF_KEYS}"
-            echo "${key} = (set)" >> "${LOG_FILE}"
-        fi
-    done
-    chmod 600 "${CONF_PIN}" "${CONF_KEYS}" 2>/dev/null || true
+    chmod 600 "${CONF_PIN}" 2>/dev/null || true
 
     # 建目录 + 导入离线镜像（升级时新包内是新版本镜像）
     DATA="$(_load_conf "${CONF_DATA}" "${DEFAULT_DATA}")"
@@ -144,13 +128,6 @@ start_daemon ()
                            -p "${APP_PORT}:8080" -e "TZ=Asia/Shanghai" )
     [ -n "${ROOTS}" ] && DOCKER_ARGS+=( -e "NASDSH_ROOTS=${ROOTS}" )
     [ -n "${PIN}" ] && DOCKER_ARGS+=( -e "TERM_PIN=${PIN}" )
-    if [ -r "${CONF_KEYS}" ]; then
-        while IFS= read -r line; do
-            [ -n "$line" ] || continue
-            key="${line%%=*}"; val="${line#*=}"
-            [ -n "$key" ] && [ -n "$val" ] && DOCKER_ARGS+=( -e "${key}=${val}" )
-        done < "${CONF_KEYS}"
-    fi
     DOCKER_ARGS+=( -v "${DATA}:/data" )
     # 项目根用逗号分隔（路径内不要带逗号/空格）
     for p in $(echo "${PROJECTS}" | tr ',' ' '); do

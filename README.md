@@ -190,10 +190,10 @@ profile（web / headless / dsh-tui）共用。已内置：
 | `opencode-go` | `https://opencode.ai/zen/go/v1` | `OPENCODE_GO_API_KEY` |
 | `xiaomi-mimo` | `https://api.xiaomimimo.com/v1` | `XIAOMI_MIMO_API_KEY` |
 
-- 安装时可填 DeepSeek / BigModel / 百炼 / Token Plan 的 Key（密码字段）；
-  在 NAS/远程环境建议直接用 API Key，OAuth 登录的 localhost 回调不一定能回到你的电脑；
-- 也可以稍后在 Web 工作台 **Settings → Models** 填写，凭据保存在
-  `/data/dsh-home/.credentials.yaml`；
+- **API Key 一律不进安装链路**（安装向导 / upk 参数 / 包内文件都没有 key 字段）。
+  装好后打开工作台，在 **Settings → Models** 里填写，凭据保存在
+  `/data/dsh-home/.credentials.yaml`（数据卷上，0600）；
+  NAS/远程环境建议直接用 API Key，OAuth 登录的 localhost 回调不一定能回到你的电脑；
 - 默认模型：环境里有 `BIGMODEL_API_KEY` 时用
   `bigmodel-coding-plan/glm-5.3-flash`，否则用 `deepseek-official/deepseek-flash`；
 - **BigModel 必须使用 `/coding/` 订阅端点**，不要改成按 token 计费的
@@ -213,7 +213,8 @@ ${DATA_PATH}/                     # 安装参数 DATA_PATH（建议 SSD 卷）
 ├── cache/                        # XDG_CACHE_HOME
 ├── logs/web.log                  # 共享 dsh web 进程的 stdout/stderr
 ├── .term_pin                     # 访问口令（0600）
-└── proxy.env                     # 可选：HTTP_PROXY / NPM_CONFIG_REGISTRY
+└── proxy.env                     # 可选：HTTP_PROXY / NPM_CONFIG_REGISTRY /
+                                  #   高级用法：KEY=value 注入环境变量（文件在数据卷，不在包里）
 ```
 
 应用升级/重建不会丢数据；容器重启会结束所有运行中的 Web/CLI 进程，但会话记录
@@ -228,7 +229,8 @@ ${DATA_PATH}/                     # 安装参数 DATA_PATH（建议 SSD 卷）
   `Host`/`Origin` 原样透传，由 dsh 自己的 browser-trust fence 校验。
 - API Key 不写入镜像；安装参数经环境变量注入，或由 dsh 凭据存储持久化。
 - 容器内以 uid 1000 / gid 10 运行，数据目录启动时校正属主。
-- **凭据不进安装包**：fpk/upk/镜像只含代码；key 只落在运行时（向导 conf/凭据库/env）。
+- **凭据不进安装链路**：安装向导 / upk 参数 / fpk / 镜像里没有任何 key 字段或 key 文件；
+  key 只落在运行时（dsh 凭据库 / 数据卷上的 proxy.env）。
   `fnos/build_fpk.py` 打包后自动跑 `tools/verify_no_keys.py` 对产物逐层扫描真实凭据值，
   命中即失败删除；启动日志对 `-e` 参数脱敏。
 

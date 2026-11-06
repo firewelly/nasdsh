@@ -43,7 +43,7 @@
             },
             {
                 "type": "tips",
-                "helpText": "访问口令：设置后打开工作台需输入；只在局域网内使用可留空。"
+                "helpText": "访问口令：设置后打开工作台需输入；只在局域网内使用可留空。模型 API Key 不在安装时填写——装好后打开工作台，在 dsh 界面 Settings → Models 里配置（凭据保存在本地数据目录，永不进安装包/日志）。"
             },
             {
                 "type": "text",
@@ -52,46 +52,6 @@
                 "rules": [{
                     "required": false,
                     "message": "口令错误"
-                }]
-            },
-            {
-                "type": "tips",
-                "helpText": "模型 API Key（均可留空，稍后可在 dsh Web 的 Settings → Models 里配置）。BigModel 使用 /coding/ 订阅端点。"
-            },
-            {
-                "type": "text",
-                "field": "nasdsh_deepseek_key",
-                "label": "DeepSeek API Key（可选）",
-                "rules": [{
-                    "required": false,
-                    "message": "Key 错误"
-                }]
-            },
-            {
-                "type": "text",
-                "field": "nasdsh_bigmodel_key",
-                "label": "BigModel API Key（可选）",
-                "rules": [{
-                    "required": false,
-                    "message": "Key 错误"
-                }]
-            },
-            {
-                "type": "text",
-                "field": "nasdsh_bailian_key",
-                "label": "百炼 API Key（可选）",
-                "rules": [{
-                    "required": false,
-                    "message": "Key 错误"
-                }]
-            },
-            {
-                "type": "text",
-                "field": "nasdsh_tokenplan_key",
-                "label": "Token Plan API Key（可选）",
-                "rules": [{
-                    "required": false,
-                    "message": "Key 错误"
                 }]
             }
         ]

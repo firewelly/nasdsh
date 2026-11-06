@@ -7,10 +7,6 @@ services:
     environment:
       - TZ=${TZ}
       - TERM_PIN=${TERMINAL_PIN}
-      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
-      - BIGMODEL_API_KEY=${BIGMODEL_API_KEY}
-      - BAILIAN_API_KEY=${BAILIAN_API_KEY}
-      - TOKENPLAN_API_KEY=${TOKENPLAN_API_KEY}
     ports:
       - "12704:8080"
     volumes:

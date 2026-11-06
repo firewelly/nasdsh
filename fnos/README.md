@@ -20,7 +20,8 @@ python3 fnos/build_fpk.py
 - 应用中心 → 手动安装 → 选择 `.fpk`；或 SSH：
   `sudo appcenter-cli install-fpk /path/to/nasdsh-fnos-0.1.0.fpk`
 - 安装向导可填：项目根目录（逗号分隔多个）、数据目录（建议 SSD 数据卷）、
-  允许根目录、访问口令 PIN、模型 API Key。全部可留空用默认值：
+  允许根目录、访问口令 PIN。全部可留空用默认值。**安装器没有 API Key 字段**——
+  装好后在工作台 Settings → Models 里配置，凭据存数据卷（0600），不进包/日志：
   - 项目根默认 `/vol1/1000/nasdsh-projects`（自动创建）
   - 数据默认 `<应用数据目录>/data`
   - 允许根默认 = 第一个项目根的顶层目录（如 `/vol1`）
@@ -51,6 +52,8 @@ fnos/
   解包（fpk→app.tgz→docker 镜像）与运行时真实凭据值比对，**命中即构建失败
   并删除产物**；也可手动复核：
   `python3 tools/verify_no_keys.py fnos/dist/xxx.fpk`
+- 安装向导只有路径与 PIN 字段，没有 API Key 字段——key 不经安装器、不落
+  安装日志/向导变量文件。
 - 启动日志对 `docker run` 参数做了脱敏（`-e` 值不落日志）。
 
 ## 升级

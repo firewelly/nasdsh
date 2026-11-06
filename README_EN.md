@@ -204,11 +204,12 @@ Built-in:
 | `opencode-go` | `https://opencode.ai/zen/go/v1` | `OPENCODE_GO_API_KEY` |
 | `xiaomi-mimo` | `https://api.xiaomimimo.com/v1` | `XIAOMI_MIMO_API_KEY` |
 
-- Keys for DeepSeek / BigModel / Bailian / Token Plan can be entered in the
-  install wizard. On a NAS/remote setup prefer plain API keys — OAuth callbacks
-  hit `localhost` on whatever machine runs the browser and may not reach you;
-- or fill them later in the Web workbench **Settings → Models**; credentials
-  persist in `/data/dsh-home/.credentials.yaml`;
+- **API keys never touch the install path** — no key fields in the install
+  wizard, upk parameters, or anything inside a package. After install, open
+  the workbench and fill them in **Settings → Models**; credentials persist in
+  `/data/dsh-home/.credentials.yaml` (on the data volume, 0600);
+  on NAS/remote setups prefer plain API keys — OAuth callbacks hit `localhost`
+  on whatever machine runs the browser and may not reach you;
 - default model: `bigmodel-coding-plan/glm-5.3-flash` when `BIGMODEL_API_KEY`
   is present, otherwise `deepseek-official/deepseek-flash`;
 - **BigModel must use the `/coding/` subscription endpoint** — never switch it
@@ -228,7 +229,9 @@ ${DATA_PATH}/                     # DATA_PATH install parameter (SSD volume reco
 ├── cache/                        # XDG_CACHE_HOME
 ├── logs/web.log                  # shared dsh web stdout/stderr
 ├── .term_pin                     # access PIN (0600)
-└── proxy.env                     # optional: HTTP_PROXY / NPM_CONFIG_REGISTRY
+└── proxy.env                     # optional: HTTP_PROXY / NPM_CONFIG_REGISTRY /
+                                  #   advanced: KEY=value env injection (file on
+                                  #   the data volume, never part of a package)
 ```
 
 App upgrades/rebuilds keep data. Container restarts end all running Web/CLI
@@ -249,8 +252,10 @@ a tab continues from there.
   environment variables, or dsh's credential store persists them.
 - The container runs as uid 1000 / gid 10; data directory ownership is fixed
   at startup.
-- **Credentials never ship in packages**: fpk/upk/images contain code only;
-  keys exist only at runtime (wizard conf / credential store / env).
+- **Credentials never touch the install path**: the install wizard, upk
+  parameters, fpk payloads and images contain no key fields or key files;
+  keys exist only at runtime (dsh credential store / proxy.env on the data
+  volume).
   `fnos/build_fpk.py` automatically runs `tools/verify_no_keys.py` on the
   artifact — a layered scan comparing against the real runtime secrets; any
   hit fails the build and deletes the artifact. Startup logs redact `-e`
