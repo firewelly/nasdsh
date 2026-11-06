@@ -1,7 +1,12 @@
 # NasDSH —— NAS 上的 DeepSeek Harness 工作台
 
-在远程 App / 浏览器里使用 NAS 上的 **DeepSeek Harness（dsh）**。
-可打开两种工作台：
+[简体中文](README.md) | [English](README_EN.md)
+
+> 本项目是 [DeepSeek Harness（dsh）](https://github.com/deepseek-ai/deepseek-harness)
+> 面向 **绿联 UGOS Pro** 与 **fnOS** 两款 NAS 系统的**一键安装封装**（X86）。
+> 目标：把“在 NAS 上装好、用好、随时用上 dsh”从一堆手工运维变成应用中心里的一次点击。
+
+装好后，在浏览器 / 远程 App 里打开工作台，两种用法：
 
 - **WEB（默认）**：一个共享的 `dsh web` 实例，浏览器里是完整的 dsh 图形界面；
   项目在 dsh 的 **Workspaces** 里添加和切换。关掉 tab 进程仍保留，重开即续。
@@ -11,6 +16,29 @@
 
 内置 dsh `0.2.1-rc.5` 与 dsh-TUI `0.18.0`，默认使用 BigModel GLM Coding Plan
 （`/coding/` 订阅端点）或 DeepSeek 官方路由。
+
+## 为什么需要 NasDSH（痛点）
+
+dsh 本身是给开发者用的 CLI 工具，默认假设你有一台装好 Node 的开发机、用 SSH
+登录、能自己排查依赖。NAS 的使用场景完全不同——这正是 NasDSH 要解决的：
+
+| # | 直接在 NAS 上装 dsh 的痛点 | NasDSH 的做法 |
+|---|---|---|
+| 1 | **依赖地狱**：fnOS / UGOS 的系统 Node 不是 18 就是 25.x 旧版，dsh 需要新版（且依赖 `node:sqlite` 实验特性）；手动换 Node 会动系统环境 | 打包进容器：node:24 + dsh + dsh-TUI + 全部依赖一次装好，不碰 NAS 系统 |
+| 2 | **装不上**：NAS 常不出海/无代理，npm 直连 registry 经常超时；每台机器都要折腾镜像源 | fnOS fpk **自带离线 Docker 镜像**，安装全程零联网；UGOS upk 镜像在 NAS 本地构建 |
+| 3 | **没有“应用”形态**：装完只是个命令行，没有桌面图标、没有端口声明、没有开机自启、应用中心看不到 | upk/fpk 应用包：桌面图标一点就开，端口统一 12704，随系统启动，应用中心管理升级/卸载 |
+| 4 | **交互门槛**：dsh web 默认只监听本机且带启动 token，SSH 里敲完还要自己配反代才能在手机/浏览器用 | sessiond 自动拉起 dsh web 并做 `/w/` 前缀反代，浏览器打开就是完整 UI；手机 App / UGREENlink 远程也能用 |
+| 5 | **会话易丢**：SSH 一断 dsh 就没了；换个终端想接着聊找不到历史 | WEB 常驻进程 + CLI 走 tmux：**关窗保留、重开即续**，换设备接上继续 |
+| 6 | **多项目混乱**：一个终端开多个项目目录来回 cd，web 只认启动时那个目录 | UI 里按项目建 tab / 用 dsh Workspaces 切换，目录白名单只放行项目盘 |
+| 7 | **安全裸奔**：NAS 上的 web 服务直接暴露局域网，谁都能连 | 可选访问口令（challenge-response + HttpOnly Cookie），dsh 自身的 token/Cookie 与 browser-trust fence 原样保留 |
+| 8 | **凭据安全**：API Key 手动 export 进 shell 历史 / profile 文件，换机要重配 | 向导填写 → 运行时凭据库（0600），**安装包内不含任何 key**，打包时自动逐层扫描校验 |
+| 9 | **升级麻烦**：npm 全局升级会污染系统环境，版本碎片化 | 容器内 `nasdsh-update` 一键升级 / 整包升级换镜像，数据卷不丢 |
+| 10 | **中文环境缺失**：NAS 系统经常没有中文 locale，终端里 vim/less 乱码 | 镜像内置 zh_CN.UTF-8 + vim/nano/tmux 配置，浏览器输入法直通 |
+
+一句话：**把“在 NAS 上运维一个 AI 编程 Agent”降级成“从应用中心装一个 App”。**
+
+> 普通 Linux 主机不需要本项目：直接 `npm i -g @deepseek-ai/dsh @deepseek-harness-tui/dsh-tui`
+> 即可使用 dsh；本项目的价值是 NAS 应用化的工作台外壳。
 
 ## 架构
 
@@ -160,6 +188,7 @@ profile（web / headless / dsh-tui）共用。已内置：
 | `token-plan` | `https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1` | `TOKENPLAN_API_KEY` |
 | `volcengine-coding-plan` | `https://ark.cn-beijing.volces.com/api/coding/v3` | `VOLCENGINE_API_KEY` |
 | `opencode-go` | `https://opencode.ai/zen/go/v1` | `OPENCODE_GO_API_KEY` |
+| `xiaomi-mimo` | `https://api.xiaomimimo.com/v1` | `XIAOMI_MIMO_API_KEY` |
 
 - 安装时可填 DeepSeek / BigModel / 百炼 / Token Plan 的 Key（密码字段）；
   在 NAS/远程环境建议直接用 API Key，OAuth 登录的 localhost 回调不一定能回到你的电脑；
@@ -236,8 +265,9 @@ NASDSH_TEST_PORT=18080 NASDSH_TEST_PATH=/tmp python3 -I tools/test_ws.py
   仍是 `http://`，不影响主要交互。
 - dsh 仍处于 preview，升级可能带来配置/插件兼容变化；`nasdsh-update` 升级后
   建议新开 tab 验证。
-- fnOS fpk 打包已提供（`fnos/`）；UGOS upk 打包需在 UGOS 机器上执行。
-  两种包运行行为一致（同一 `core/`）。普通 Linux 直接安装 dsh，无需本项目。
+- fnOS 的 fpk 内置 Docker 离线镜像（这是 fnOS 应用的交付机制——fnOS 机器没有
+  预装 Node）；普通 Linux 用户请直接安装 dsh，不要用本项目。
+- UGOS upk 打包需在 UGOS 机器上执行；两种包运行行为一致（同一 `core/`）。
 
 ## 许可与第三方组件
 
