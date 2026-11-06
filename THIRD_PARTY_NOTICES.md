@@ -7,8 +7,8 @@ NasDSH 以独立进程/静态文件方式聚合并分发以下开源组件。各
 
 | 组件 | 版本 | 许可证 | 用途 / 位置 |
 |---|---|---|---|
-| DeepSeek Harness (`@deepseek-ai/dsh`) | 0.2.1-rc.5 | MIT | Web / CLI Agent 运行时；`/usr/local/lib/node_modules/@deepseek-ai/dsh` |
-| dsh-TUI (`@deepseek-harness-tui/dsh-tui`) | 0.18.0 | MIT | 交互式终端界面；全局包 + `$DSH_HOME/profiles/dsh-tui` |
+| DeepSeek Harness (`@deepseek-ai/dsh`) | 0.2.1-rc.5 | MIT | Web / CLI Agent 运行时；上游 https://github.com/deepseek-ai/deepseek-harness ；`/usr/local/lib/node_modules/@deepseek-ai/dsh` |
+| dsh-TUI (`@deepseek-harness-tui/dsh-tui`) | 0.18.0 | MIT | 交互式终端界面；上游 https://github.com/ccch1mneyyy/dsh-TUI ；全局包 + `$DSH_HOME/profiles/dsh-tui` |
 | xterm.js | vendor | MIT | 浏览器终端；`/srv/www/vendor/xterm.js` |
 | xterm-addon-fit | vendor | MIT | 终端自适应；`/srv/www/vendor/addon-fit.js` |
 | tmux | Debian 12 包 | ISC | CLI 会话持久化 |

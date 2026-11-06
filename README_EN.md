@@ -7,6 +7,14 @@
 > for two NAS operating systems: **UGreen UGOS Pro** and **fnOS** (both x86_64).
 > Goal: turn "install, run, and keep using dsh on a NAS" from a pile of manual
 > sysadmin work into a single click in the app center.
+>
+> **Upstream**: the agent runtime is
+> [deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)
+> (dsh `0.2.1-rc.5`, MIT) and the terminal UI is the community project
+> [ccch1mneyyy/dsh-TUI](https://github.com/ccch1mneyyy/dsh-TUI) (`0.18.0`, MIT).
+> NasDSH only adds the NAS-app packaging (bundling, reverse proxy, session
+> management) — it does not modify or redistribute a fork of dsh. This project
+> is not affiliated with DeepSeek; please file issues in this repository.
 
 Once installed, open the workbench in a browser or the remote app and use it in
 two ways:

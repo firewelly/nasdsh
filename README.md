@@ -5,6 +5,12 @@
 > 本项目是 [DeepSeek Harness（dsh）](https://github.com/deepseek-ai/deepseek-harness)
 > 面向 **绿联 UGOS Pro** 与 **fnOS** 两款 NAS 系统的**一键安装封装**（X86）。
 > 目标：把“在 NAS 上装好、用好、随时用上 dsh”从一堆手工运维变成应用中心里的一次点击。
+>
+> **上游引用**：Agent 运行时是 [deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)
+> （dsh `0.2.1-rc.5`，MIT），终端交互界面是社区项目
+> [ccch1mneyyy/dsh-TUI](https://github.com/ccch1mneyyy/dsh-TUI)（`0.18.0`，MIT）。
+> NasDSH 只做 NAS 应用化封装（打包/反代/会话管理），不修改、不分发修改版的
+> dsh 源码；本项目与 DeepSeek 官方无隶属关系，issues 请发本项目仓库。
 
 装好后，在浏览器 / 远程 App 里打开工作台，两种用法：
 
