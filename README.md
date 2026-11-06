@@ -279,9 +279,20 @@ NASDSH_TEST_PORT=18080 NASDSH_TEST_PATH=/tmp python3 -I tools/test_ws.py
 
 ## 许可与第三方组件
 
-- 自研代码：**MIT**（见 `LICENSE`）
+- 自研代码：**MIT**，版权人 **袁梦龙（Menglong Yuan，GitHub: @firewelly）**，
+  全文见 [`LICENSE`](LICENSE)（标准 MIT 文本 + 具体版权人，非占位符模板）。
 - 聚合分发：dsh（MIT）、dsh-TUI（MIT）、xterm.js / addon-fit（MIT）、
   tmux（ISC）、Node.js（MIT 风格）、Debian 基础镜像（多许可）。全部为独立
-  进程/静态文件聚合，无 copyleft 传染；声明见 `THIRD_PARTY_NOTICES.md`。
-- “DeepSeek Harness / dsh” 为 DeepSeek 项目品牌；本项目为个人/内部使用，
-  正式对外分发建议在应用名中注明“内置 DeepSeek Harness”。
+  进程/静态文件聚合，无 copyleft 传染；各组件版权人与许可证见
+  [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
+- 隐私政策：[`PRIVACY.md`](PRIVACY.md)（中英双语，按业务功能逐项披露）；
+  用户协议：[`TERMS.md`](TERMS.md)。两份文档同时内置于应用，页脚常驻入口。
+- 界面语言：简体中文 / English，可在页脚切换（默认跟随浏览器语言）。
+- “DeepSeek Harness / dsh” 为 DeepSeek 项目品牌；本项目不是 DeepSeek 官方
+  产品，应用名称与简介中已注明“内置 DeepSeek Harness”。
+
+## 联系与支持
+
+- 问题反馈：<https://github.com/firewelly/nasdsh/issues>
+- 邮箱：menglong_yuan@126.com
+- 开发者：袁梦龙（个人开发者）

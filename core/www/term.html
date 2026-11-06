@@ -22,7 +22,7 @@
 <div id="overlay">
   <div id="ovmsg">连接已断开</div>
   <div class="sub" id="ovsub"></div>
-  <div class="btn">重新连接</div>
+  <div class="btn" id="ovbtn">重新连接</div>
 </div>
 <script src="/vendor/xterm.js"></script>
 <script src="/vendor/addon-fit.js"></script>
@@ -31,6 +31,33 @@
 const qs = new URLSearchParams(location.search);
 const session = qs.get("session") || "main";
 const path = qs.get("path") || "";
+const LANG = qs.get("lang") === "en" ? "en" : "zh";
+const T = {
+  zh: {
+    disconnected: "连接已断开",
+    reconnect: "重新连接",
+    connecting: "连接中…",
+    reconnecting: "重连中 ({0})…",
+    closedSub: "会话可能已结束。点击重新连接会在原项目目录重新启动 dsh-TUI。",
+    title: "NasDSH 终端"
+  },
+  en: {
+    disconnected: "Disconnected",
+    reconnect: "Reconnect",
+    connecting: "Connecting…",
+    reconnecting: "Reconnecting ({0})…",
+    closedSub: "The session may have ended. Clicking reconnect restarts dsh-TUI in the same project directory.",
+    title: "NasDSH terminal"
+  }
+}[LANG];
+const t = (k, ...a) => {
+  let s = T[k] || k;
+  a.forEach((v, i) => { s = s.replace("{" + i + "}", v); });
+  return s;
+};
+document.documentElement.lang = LANG === "en" ? "en" : "zh-CN";
+document.title = t("title");
+document.getElementById("ovbtn").textContent = t("reconnect");
 
 const term = new Terminal({
   fontFamily: '"SF Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace',
@@ -72,7 +99,7 @@ function wsURL(){
 
 function connect(){
   closed = false;
-  overlay(false, "连接中…");
+  overlay(false, t("connecting"));
   ws = new WebSocket(wsURL());
   ws.binaryType = "arraybuffer";
 
@@ -93,10 +120,10 @@ function connect(){
     if (closed) return;
     retry++;
     if (retry > 6){
-      overlay(true, "连接已断开", "会话可能已结束。点击重新连接会在原项目目录重新启动 dsh-TUI。");
+      overlay(true, t("disconnected"), t("closedSub"));
       return;
     }
-    overlay(false, "重连中 (" + retry + ")…");
+    overlay(false, t("reconnecting", retry));
     setTimeout(connect, Math.min(retry * 1200, 5000));
   };
   ws.onerror = () => { try{ ws.close(); }catch(e){} };

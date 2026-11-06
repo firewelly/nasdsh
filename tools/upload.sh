@@ -19,7 +19,9 @@ echo "==> 打包 core/ + src/（tar 流，排除垃圾文件）"
 cd "$ROOT"
 COPYFILE_DISABLE=1 tar czf /tmp/nasdsh-src.tgz --exclude='.DS_Store' \
         --exclude='__pycache__' --exclude='.pytest_cache' --exclude='build_dir' \
-        core src tools fnos deploy store
+        --exclude='www/docs' \
+        core src tools fnos store \
+        LICENSE PRIVACY.md TERMS.md THIRD_PARTY_NOTICES.md README.md README_EN.md
 
 echo "==> 传输源码 → $DEST_HOST:nasdsh-src/"
 run_ssh "mkdir -p nasdsh-src"

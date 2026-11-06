@@ -108,26 +108,17 @@ parameters:
 i18n:
   en-US:
     name: "NasDSH Workbench"
-    description: >-
-      DeepSeek Harness (dsh) on your NAS. Open the shared Web workspace (one
-      dsh web instance; add and switch projects as Workspaces inside the dsh
-      UI) or create a CLI tab (per-project tmux + dsh-TUI). CLI tabs survive
-      closing the window and reconnect seamlessly. Sessions and model
-      credentials persist on the SSD volume you choose. Port 12704.
-    author: firewell
+    description: "Runs DeepSeek Harness (dsh) on your NAS — dsh 0.2.1-rc.5 and dsh-TUI 0.18.0 are bundled (not an official DeepSeek product). Open the shared web workspace (one dsh web instance; add and switch projects as Workspaces inside the dsh UI) or create a CLI tab (per-project tmux + dsh-TUI). CLI tabs survive closing the window and reconnect seamlessly. Sessions and model credentials persist on the SSD volume you choose; the package contains no preloaded keys. Optional access PIN. Chinese and English UI. Port 12704."
+    author: Menglong Yuan
     official: https://github.com/firewelly/nasdsh
-    help: https://github.com/firewelly/nasdsh#readme
-    publisher: firewell
+    help: https://github.com/firewelly/nasdsh/blob/main/README_EN.md
+    publisher: Menglong Yuan
     publisher_link: https://github.com/firewelly
   zh-CN:
     name: "NasDSH 工作台"
-    description: >-
-      在 NAS 上运行 DeepSeek Harness。打开共享 Web 工作台（一个 dsh web
-      实例，项目在 dsh UI 内切 Workspace），或新建 CLI 终端（每个项目一个
-      tmux + dsh-TUI，关窗保留、重开即续）。会话与模型凭据持久保存在您指定
-      的 SSD 卷。端口 12704。
-    author: firewell
+    description: "在 NAS 上运行 DeepSeek Harness（内置 dsh 0.2.1-rc.5 + dsh-TUI 0.18.0，非 DeepSeek 官方产品）。打开共享 Web 工作台（一个 dsh web 实例，项目在 dsh UI 内切 Workspace），或新建 CLI 终端（每个项目一个 tmux + dsh-TUI，关窗保留、重开即续）。会话与模型凭据持久保存在您指定的 SSD 卷，安装包不含任何预置密钥；可选访问口令。界面支持简体中文 / English。端口 12704。"
+    author: 袁梦龙
     official: https://github.com/firewelly/nasdsh
     help: https://github.com/firewelly/nasdsh#使用
-    publisher: firewell
+    publisher: 袁梦龙
     publisher_link: https://github.com/firewelly

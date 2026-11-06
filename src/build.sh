@@ -29,6 +29,12 @@ if [ "$(df -P "$ROOT" | awk 'NR==2{print $6}')" = "/" ]; then
 fi
 
 echo "==> [1/4] docker build nasdsh:${VERSION}（上下文=$ROOT/core）"
+# 应用内「隐私政策 / 用户协议 / 许可协议」弹窗与商店链接共用同一份文档：
+# 把仓库根目录的文档同步进 www/docs（镜像内 /srv/www/docs），避免两处正文不一致。
+mkdir -p "$ROOT/core/www/docs"
+[ -f "$ROOT/PRIVACY.md" ] && cp "$ROOT/PRIVACY.md" "$ROOT/core/www/docs/privacy.md"
+[ -f "$ROOT/TERMS.md" ] && cp "$ROOT/TERMS.md" "$ROOT/core/www/docs/terms.md"
+[ -f "$ROOT/LICENSE" ] && cp "$ROOT/LICENSE" "$ROOT/core/www/docs/license.txt"
 docker build -f "$ROOT/core/Dockerfile" -t "nasdsh:${VERSION}" "$ROOT/core"
 
 echo "==> 冒烟: dsh --version / dsh-tui 版本"

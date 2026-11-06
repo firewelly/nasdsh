@@ -309,11 +309,24 @@ NASDSH_TEST_PORT=18080 NASDSH_TEST_PATH=/tmp python3 -I tools/test_ws.py
 
 ## License & third-party components
 
-- Original code: **MIT** (see `LICENSE`)
+- Original code: **MIT**, copyright holder **袁梦龙 (Menglong Yuan, GitHub:
+  @firewelly)**; full text in [`LICENSE`](LICENSE) (standard MIT text with a
+  named copyright holder, not a placeholder template).
 - Aggregated components: dsh (MIT), dsh-TUI (MIT), xterm.js / addon-fit (MIT),
   tmux (ISC), Node.js (MIT-style), Debian base image (multi-license). All are
-  separate processes/static files — no copyleft contamination. See
-  `THIRD_PARTY_NOTICES.md`.
+  separate processes/static files — no copyleft contamination. Copyright holders
+  and licences are listed in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+- Privacy policy: [`PRIVACY.md`](PRIVACY.md) (bilingual, disclosed per feature);
+  Terms of service: [`TERMS.md`](TERMS.md). Both are bundled in the app and
+  always reachable from the footer.
+- UI languages: Simplified Chinese / English, switchable in the footer (follows
+  the browser language by default).
 - "DeepSeek Harness / dsh" is DeepSeek's project name. This is not an official
-  DeepSeek product; the MIT license grants no trademark rights. For public
-  distribution, clarify "bundles DeepSeek Harness" in the app name.
+  DeepSeek product; the app name and description state that it bundles DeepSeek
+  Harness.
+
+## Contact & support
+
+- Issues: <https://github.com/firewelly/nasdsh/issues>
+- Email: menglong_yuan@126.com
+- Developer: Menglong Yuan (individual developer)

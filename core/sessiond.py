@@ -789,6 +789,8 @@ CONTENT_TYPES = {
     ".svg": "image/svg+xml",
     ".json": "application/json; charset=utf-8",
     ".woff2": "font/woff2",
+    ".md": "text/plain; charset=utf-8",
+    ".txt": "text/plain; charset=utf-8",
 }
 
 
@@ -944,6 +946,12 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_file("index.html")
             elif path == "/term.html":
                 self.send_file("term.html")
+            elif path == "/privacy.md":
+                self.send_file("docs/privacy.md")
+            elif path == "/terms.md":
+                self.send_file("docs/terms.md")
+            elif path == "/license.txt":
+                self.send_file("docs/license.txt")
             elif path.startswith("/vendor/") or path.startswith("/app/"):
                 self.send_file(path.lstrip("/"))
             else:

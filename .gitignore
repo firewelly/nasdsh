@@ -9,10 +9,8 @@ fnos/dist/
 dist/
 
 # 打包/构建产物与本地配置
-dist/
-fnos/dist/
 *.fpk
 *.tar.gz
-src/build_dir/
-.DS_Store
-*.log
+
+# 由 src/build.sh 从仓库根目录同步进镜像的文档副本（勿提交，单源在根目录）
+core/www/docs/
