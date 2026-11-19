@@ -96,10 +96,27 @@ done
 
 echo "[nasdsh] dsh $(dsh --version 2>/dev/null || echo 'n/a') · DSH_HOME=$DSH_HOME"
 
-# 降权运行：Docker 自动创建的挂载目录可能属 root
+# 降权运行：Docker 自动创建的挂载目录可能属 root。
+# chown 必须真正生效——UGOS 平台偶发命令成功但属主未变（DX4600 2026-11-18：
+# 日志打印"已校正"实际仍 root:0700，降权后 dsh web EACCES 起不来，/w/ 502）。
+# 故以实际属主为准校验：失败重试 → chmod 兜底 → 仍异常则显式报警，绝不静默。
 if [ "$(id -u)" = "0" ]; then
-  chown -R 1000:10 "$DATA" 2>/dev/null || true
-  echo "[nasdsh] 已校正 $DATA 属主（1000:10），降权运行"
+  ok=0
+  for i in 1 2 3; do
+    chown -R 1000:10 "$DATA" 2>/dev/null || true
+    if [ -z "$(find "$DATA" -user 0 -print -quit 2>/dev/null)" ]; then ok=1; break; fi
+    echo "[nasdsh] ⚠️ $DATA 属主校正未生效（第 $i 次），重试"
+    sleep 1
+  done
+  if [ "$ok" = "1" ]; then
+    echo "[nasdsh] 已校正 $DATA 属主（1000:10），降权运行"
+  else
+    echo "[nasdsh] ⚠️ chown 持续未生效，降级 chmod a+rwX 兜底"
+    chmod -R a+rwX "$DATA" 2>/dev/null || true
+    if [ -n "$(find "$DATA" -user 0 ! -perm -o+r -print -quit 2>/dev/null)" ]; then
+      echo "[nasdsh] ⚠️ ⚠️ $DATA 权限兜底后仍有 root 0700 目录——请在应用中心重启/重装应用"
+    fi
+  fi
   exec setpriv --reuid=1000 --regid=10 --clear-groups python3 /srv/sessiond.py
 fi
 exec python3 /srv/sessiond.py
